@@ -1,0 +1,140 @@
+.slider {
+    position: relative;
+}
+
+.slider_arrow-left {
+    background-clip: content-box;
+    padding: 20px 0;
+    box-sizing: border-box; /* 요소의 크기를 측정할 기준을 정함, content-box로 할 지, border-box로 할 지 */
+    transform: 400ms all ease-in-out;
+    cursor: pointer;
+    width: 80px;
+    z-index: 1000; /* 우선순위 무조건 최우선, 맨 앞에 위치하게 */
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    visibility: hidden;
+}
+
+.slider_arrow-right {
+    background-clip: content-box;
+    padding: 20px 0;
+    box-sizing: border-box; /* 요소의 크기를 측정할 기준을 정함, content-box로 할 지, border-box로 할 지 */
+    transform: 400ms all ease-in-out;
+    cursor: pointer;
+    width: 80px;
+    z-index: 1000; /* 우선순위 무조건 최우선, 맨 앞에 위치하게 */
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    visibility: hidden;
+}
+
+.arrow {
+    transition: 400ms all ease-in-out;
+}
+
+/* 화살표에 커서 올리면 0.4초 1.5배로 커지게 */
+.arrow:hover {
+    transition: 400ms all ease-in-out;
+    transform: scale(1.5);
+}
+
+/* 슬라이드 할 수 있는 Row에 호버 시 */
+.slider:hover .slider_arrow-left {
+    transition: 400ms all ease-in-out;
+    visibility: visible;
+}
+
+.slider:hover .slider_arrow-right {
+    transition: 400ms all ease-in-out;
+    visibility: visible;
+}
+
+/* 화살표 위치 등장시킴 */
+
+/* 화살표에 호버시 */
+.slider_arrow-left:hover {
+    background: rgba(20, 20, 20, 0.5);
+    transition: 400ms all ease-in-out;
+}
+
+.slider_arrow-right:hover {
+    background: rgba(20, 20, 20, 0.5);
+    transition: 400ms all ease-in-out;
+}
+
+/* 그쪽 화살표만 배경색 바꿔주며 위치 표시 */
+
+.row_posters {
+    display: flex;
+    overflow-y: hidden;
+    overflow-x: scroll; /* 옆으로 스크롤 할 수 있게 */
+    padding: 20px 0 20px 20px;
+    scroll-behavior: smooth;
+}
+
+.row_posters::-webkit-scrollbar {
+    display: none;
+}
+
+/* 각각의 사진들은 */
+.row_poster {
+    object-fit: contain; /* 비율 최대한 맞추는데 */
+    width: 100%; /* 자동 맞춤이고 */
+    max-height: 144px; /* height 144px에 맞춰서 비율 안 깨지는 한에서 width 100% */
+    margin-right: 10px;
+    transition: transform 450ms; /* trasnform만 transition할 건데 할 때는 0.45초 동안 */
+    border-radius: 4px;
+}
+
+.row_poster:hover {
+    transform: scale(1.08); /* 호버시 1.08배 커지게 */
+}
+
+@media screen and (min-width: 1200px) {
+    .row_poster {
+        max-height: 160px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .row_poster {
+        max-height: 280px;
+    }
+}
+
+.swiper-pagination {
+    text-align: right !important;
+}
+
+.swiper-pagination-bullet {
+    background: gray !important;
+    opacity: 1 !important;
+}
+
+.swiper-pagination-bullet-active {
+    background-color: white !important;
+}
+
+.swiper-button-prev {
+    color: white !important;
+}
+
+.swiper-button-next {
+    color: white !important;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+    font-size: 1.3rem !important;
+    font-weight: 600 !important;
+}
