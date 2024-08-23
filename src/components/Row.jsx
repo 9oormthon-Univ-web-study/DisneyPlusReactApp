@@ -2,10 +2,13 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from '../api/axios';
 import { useCallback } from 'react';
 import './Row.css';
+import MovieModal from './MovieModal/MovieModal';
 
 const Row = ({ title, id, fetchUrl }) => {
     const [movies, setMovies] = useState([]);
     const rowRef = useRef(null); // useRef로 row_posters 요소를 참조
+    const [modalOpen, setModalOpen] = useState(false);
+    const [movieSelect, setMovieSelect] = useState({});
 
     const fetchMovieData = useCallback(async () => {
         const response = await axios.get(fetchUrl);
@@ -26,6 +29,11 @@ const Row = ({ title, id, fetchUrl }) => {
 
     console.log(movies);
 
+    const handleClick = (movie) => {
+        setModalOpen(true);
+        setMovieSelect(movie);
+    };
+
     return (
         <div className="row">
             <h2>{title}</h2>
@@ -40,6 +48,7 @@ const Row = ({ title, id, fetchUrl }) => {
                             className="row_poster"
                             src={`https://image.tmdb.org/t/p/original/${movie.backdrop_path}`}
                             alt={movie.title || movie.original_name}
+                            onClick={() => handleClick(movie)}
                         />
                     ))}
                 </div>
@@ -47,6 +56,8 @@ const Row = ({ title, id, fetchUrl }) => {
                     <span className="arrow">{'>'}</span>
                 </div>
             </div>
+
+            {modalOpen && <MovieModal {...movieSelect} setModalOpen={setModalOpen} />}
         </div>
     );
 };
