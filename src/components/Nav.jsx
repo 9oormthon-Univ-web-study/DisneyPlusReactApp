@@ -4,20 +4,22 @@ import styled from 'styled-components';
 const Nav = () => {
     const [show, setShow] = useState(false); //상단바의 배경색을 지정할 기준이 되는 상태 변수
     useEffect(() => {
-        window.addEventListener('scroll', () => {
-            //스크롤 값을 받고 50보다 크면 상태를 true로
-            if (window.scrollY > 50) {
-                setShow(true);
-            } else {
-                setShow(false);
-            }
-        });
+        window.addEventListener('scroll', handleScroll);
         return () => {
-            window.removeEventListener('scroll', () => {});
+            window.removeEventListener('scroll', handleScroll);
             //removeEventListener는 컴포넌트를 안 쓸 때(언마운트 될 때)는 이벤트 리스너 지우도록
             //이게 없으면 컴포넌트를 없앴다가 다시 돌아올 때마다 계속 리스너가 쌓이게 됨
         };
     }, []);
+
+    const handleScroll = () => {
+        //스크롤 값을 받고 50보다 크면 상태를 true로
+        if (window.scrollY > 50) {
+            setShow(true);
+        } else {
+            setShow(false);
+        }
+    };
 
     return (
         <NavWrapper show={show}>
