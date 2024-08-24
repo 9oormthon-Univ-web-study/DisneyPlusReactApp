@@ -21,6 +21,7 @@ function App() {
         <div className="app">
             <Routes>
                 <Route path="/" element={<Layout />}>
+                    {/* "/"로 접근했을 때 기본은 Login페이지 */}
                     <Route index element={<Login />} />
                     <Route path="main" element={<Main />} />
                     <Route path=":movieId" element={<Detail />} />
