@@ -112,19 +112,24 @@
     }
 }
 
+/* swiper 라이브러리에서 제공하는 클래스 */
+/* 페이지 표시는 오른쪽 정렬 */
 .swiper-pagination {
     text-align: right !important;
 }
 
+/* 페이지 표시할 때 사용되는 작은 원들 */
 .swiper-pagination-bullet {
     background: gray !important;
     opacity: 1 !important;
 }
 
+/* 현재 활성화 된 원 */
 .swiper-pagination-bullet-active {
     background-color: white !important;
 }
 
+/* 왼쪽 버튼 */
 .swiper-button-prev {
     color: white !important;
 }
