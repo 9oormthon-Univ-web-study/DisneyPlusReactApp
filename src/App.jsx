@@ -25,6 +25,7 @@ function App() {
                     <Route index element={<Login />} />
                     <Route path="main" element={<Main />} />
                     <Route path=":movieId" element={<Detail />} />
+                    {/* :movieId로 설정해줘서 Detail컴포넌트에서 useParams로 movieId값 가져올 수 있음 */}
                     <Route path="search" element={<Search />} />
                 </Route>
             </Routes>

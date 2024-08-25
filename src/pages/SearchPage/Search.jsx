@@ -3,6 +3,7 @@ import axios from '../../api/axios';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './Search.css';
+import useDebounce from '../../hooks/useDebounce';
 
 const Search = () => {
     const [searchResult, setSearchResult] = useState([]);
@@ -13,19 +14,20 @@ const Search = () => {
     };
 
     let query = useQuery();
-    const searchTerm = query.get('q');
+    //const searchTerm = query.get('q');
+    const debounceTerm = useDebounce(query.get('q'), 500); //api요청을 줄이기 위해 검색 시 500ms만큼의 딜레이 추가
 
     useEffect(() => {
-        if (searchTerm) {
-            fetchSearchMovie(searchTerm);
+        if (debounceTerm) {
+            fetchSearchMovie(debounceTerm);
         }
-    }, [searchTerm]);
+    }, [debounceTerm]);
 
-    const fetchSearchMovie = async (searchTerm) => {
+    const fetchSearchMovie = async (debounceTerm) => {
         try {
-            const request = await axios.get(`/search/multi?include_adult=false&query=${searchTerm}`);
+            const request = await axios.get(`/search/multi?include_adult=false&query=${debounceTerm}`);
             setSearchResult(request.data.results);
-            console.log(searchTerm);
+            console.log(debounceTerm);
             console.log(searchResult);
         } catch (error) {
             console.error(error);
@@ -58,7 +60,7 @@ const Search = () => {
         return (
             <section className="no-results">
                 <div className="no-results_text">
-                    <p>찾고자 하는 검색어 "{searchTerm}"에 맞는 영화가 없습니다.</p>
+                    <p>찾고자 하는 검색어 "{debounceTerm}"에 맞는 영화가 없습니다.</p>
                 </div>
             </section>
         );
