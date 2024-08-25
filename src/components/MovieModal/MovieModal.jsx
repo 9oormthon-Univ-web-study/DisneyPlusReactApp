@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import './MovieModal.css';
+import useOnClickOutside from '../../hooks/useOnClickOutside';
 
 const MovieModal = ({
     backdrop_path,
@@ -11,11 +12,16 @@ const MovieModal = ({
     vote_average,
     setModalOpen,
 }) => {
+    const ref = useRef();
+
+    useOnClickOutside(ref, () => {
+        setModalOpen(false);
+    });
     return (
         <div>
             <div className="presentation" role="presentation">
                 <div className="wrapper-modal">
-                    <div className="modal">
+                    <div className="modal" ref={ref /* 모달 안/밖 클릭의 기준이 되는 곳 참조 */}>
                         <span
                             className="modal-close"
                             onClick={() => {
