@@ -66,7 +66,7 @@ export default Nav;
 
 const Login = styled.a`
     background-color: rgba(0, 0, 0, 0.6);
-    padding: 8px, 16px;
+    padding: 8px 16px;
     text-transform: uppercase; //대문자로 변경
     letter-spacing: 1.5px;
     border: 1px solid #f9f9f9;
