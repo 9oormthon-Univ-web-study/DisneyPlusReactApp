@@ -17,6 +17,7 @@ const MovieModal = ({
     useOnClickOutside(ref, () => {
         setModalOpen(false);
     });
+    console.log('모달열림');
     return (
         <div>
             <div className="presentation" role="presentation">

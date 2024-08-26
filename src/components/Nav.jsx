@@ -1,12 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from 'firebase/auth';
 
 const Nav = () => {
+    const initialUserData = localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')) : {};
+
     const [show, setShow] = useState(false); //상단바의 배경색을 지정할 기준이 되는 상태 변수
     const { pathname } = useLocation();
     const [searchValue, setSearchValue] = useState('');
     const navigate = useNavigate();
+    const auth = getAuth();
+    const provider = new GoogleAuthProvider();
+    const [userData, setUserData] = useState(initialUserData);
+    //리렌더링 될 때 빈 객체로 초기화되어서 로컬스토리지에 있더라도 사용하지 않고 있는 상태기 때문에 initialUserData 가져오는 로직 추가
+
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            // (auth,callback)형태로 받고, 사용자의 인증 상태가 변경될 때(로그인, 로그아웃 등)마다 지정된 콜백 함수가 실행됨
+            if (user) {
+                //유저 정보가 있을 때
+                if (pathname === '/') {
+                    //현재 경로가 로그인 페이지라면
+                    navigate('/main'); //메인 페이지로 이동
+                }
+            } else {
+                navigate('/'); //login 페이지
+            }
+        });
+        // Nav 컴포넌트는 Outlet을 통해 모든 컴포넌트에서 사용되기 때문에 Nav에서 설정해줌
+    }, [auth, navigate, pathname]);
 
     useEffect(() => {
         window.addEventListener('scroll', handleScroll);
@@ -16,8 +39,6 @@ const Nav = () => {
             //이게 없으면 컴포넌트를 없앴다가 다시 돌아올 때마다 계속 리스너가 쌓이게 됨
         };
     }, []);
-
-    useEffect(() => {});
 
     const handleScroll = () => {
         //스크롤 값을 받고 50보다 크면 상태를 true로
@@ -32,6 +53,29 @@ const Nav = () => {
         setSearchValue(e.target.value);
         navigate(`/search?q=${e.target.value}`); //url 바꿔주고 Search컴포넌트 리렌더링됨
     };
+
+    const handleAuth = () => {
+        signInWithPopup(auth, provider)
+            .then((result) => {
+                setUserData(result.user);
+                localStorage.setItem('userData', JSON.stringify(result.user));
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
+
+    const handleLogOut = () => {
+        signOut(auth)
+            .then(() => {
+                setUserData({});
+                navigate('/');
+            })
+            .catch((error) => {
+                alert(error);
+            });
+    };
+
     return (
         <NavWrapper show={show}>
             <Logo>
@@ -46,17 +90,37 @@ const Nav = () => {
             </Logo>
             {/* "/"로 접근했을 때 기본은 Login페이지기 때문에 Login페이지에서는 login할 수 있는 기능을 렌더링 시켜주기 위해서 */}
             {pathname === '/' ? (
-                <Login>login</Login>
-            ) : (
-                <Input
-                    onChange={(e) => {
-                        handleChange(e);
+                <Login
+                    onClick={() => {
+                        handleAuth();
                     }}
-                    value={searchValue}
-                    className="nav_input"
-                    type="text"
-                    placeholder="검색어를 입력하세요"
-                />
+                >
+                    login
+                </Login>
+            ) : (
+                <>
+                    <Input
+                        onChange={(e) => {
+                            handleChange(e);
+                        }}
+                        value={searchValue}
+                        className="nav_input"
+                        type="text"
+                        placeholder="검색어를 입력하세요"
+                    />
+                    <SignOut>
+                        <UserImg src={userData.photoURL} alt="userData.displayName" />
+                        <DropDown>
+                            <span
+                                onClick={() => {
+                                    handleLogOut();
+                                }}
+                            >
+                                Sign out
+                            </span>
+                        </DropDown>
+                    </SignOut>
+                </>
             )}
         </NavWrapper>
     );
@@ -116,5 +180,42 @@ const Logo = styled.a`
     img {
         display: block;
         width: 100%;
+    }
+`;
+
+const UserImg = styled.img`
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+`;
+
+const DropDown = styled.div`
+    position: absolute;
+    top: 48px;
+    right: 0px;
+    background: rgb(19, 19, 19);
+    border: 1px solid rgba(151, 151, 151, 0.34);
+    border-radius: 4px;
+    box-shadow: rgb(0 0 0 /50%) 0px 0px 18px 0px;
+    padding: 10px;
+    font-size: 14px;
+    letter-spacing: 3px;
+    width: 100%;
+    opacity: 0;
+`;
+const SignOut = styled.div`
+    position: relative;
+    height: 48px;
+    width: 48px;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+        ${DropDown} {
+            opacity: 1;
+            transition-duration: 1s;
+        }
     }
 `;

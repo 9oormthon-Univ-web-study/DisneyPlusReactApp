@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from '../api/axios';
 import { useCallback } from 'react';
 import './Row.css';
@@ -31,8 +31,10 @@ const Row = ({ title, id, fetchUrl }) => {
     console.log(movies);
 
     const handleClick = (movie) => {
+        console.log('Movie selected:', movie); // 디버깅용 로그 추가
         setModalOpen(true);
         setMovieSelect(movie);
+        console.log('Modal open:', modalOpen); // 디버깅용 로그 추가
     };
 
     return (
@@ -66,7 +68,7 @@ const Row = ({ title, id, fetchUrl }) => {
             >
                 <Content id={id}>
                     {movies.map((movie) => (
-                        <SwiperSlide>
+                        <SwiperSlide key={movie.id}>
                             <Wrap>
                                 <img
                                     key={movie.id}
@@ -77,10 +79,13 @@ const Row = ({ title, id, fetchUrl }) => {
                             </Wrap>
                         </SwiperSlide>
                     ))}
-
-                    {modalOpen && <MovieModal {...movieSelect} setModalOpen={setModalOpen} />}
                 </Content>
             </Swiper>
+            {
+                modalOpen && (
+                    <MovieModal {...movieSelect} setModalOpen={setModalOpen} />
+                ) /* 호출 위치에 따라 z-index가 안 맞아 수정 */
+            }
         </Container>
     );
 };
