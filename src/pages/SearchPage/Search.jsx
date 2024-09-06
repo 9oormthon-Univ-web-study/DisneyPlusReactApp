@@ -27,8 +27,6 @@ const Search = () => {
         try {
             const request = await axios.get(`/search/multi?include_adult=false&query=${debounceTerm}`);
             setSearchResult(request.data.results);
-            console.log(debounceTerm);
-            console.log(searchResult);
         } catch (error) {
             console.error(error);
         }

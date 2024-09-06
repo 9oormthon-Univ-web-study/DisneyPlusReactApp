@@ -59,7 +59,6 @@ const Nav = () => {
     const handleAuth = () => {
         signInWithPopup(auth, provider)
             .then((result) => {
-                console.log(result);
                 dispatch(
                     setUser({
                         id: result.user.uid,

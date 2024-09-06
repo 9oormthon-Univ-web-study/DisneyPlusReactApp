@@ -28,13 +28,9 @@ const Row = ({ title, id, fetchUrl }) => {
         fetchMovieData();
     }, [fetchMovieData]);
 
-    console.log(movies);
-
     const handleClick = (movie) => {
-        console.log('Movie selected:', movie); // 디버깅용 로그 추가
         setModalOpen(true);
         setMovieSelect(movie);
-        console.log('Modal open:', modalOpen); // 디버깅용 로그 추가
     };
 
     return (
