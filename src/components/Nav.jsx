@@ -2,18 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from 'firebase/auth';
+import { setUser, removeUser } from '../store/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Nav = () => {
-    const initialUserData = localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')) : {};
-
     const [show, setShow] = useState(false); //상단바의 배경색을 지정할 기준이 되는 상태 변수
     const { pathname } = useLocation();
     const [searchValue, setSearchValue] = useState('');
     const navigate = useNavigate();
     const auth = getAuth();
     const provider = new GoogleAuthProvider();
-    const [userData, setUserData] = useState(initialUserData);
     //리렌더링 될 때 빈 객체로 초기화되어서 로컬스토리지에 있더라도 사용하지 않고 있는 상태기 때문에 initialUserData 가져오는 로직 추가
+
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.user);
 
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
@@ -57,8 +59,15 @@ const Nav = () => {
     const handleAuth = () => {
         signInWithPopup(auth, provider)
             .then((result) => {
-                setUserData(result.user);
-                localStorage.setItem('userData', JSON.stringify(result.user));
+                console.log(result);
+                dispatch(
+                    setUser({
+                        id: result.user.uid,
+                        email: result.user.email,
+                        displayName: result.user.displayName,
+                        photoURL: result.user.photoURL,
+                    })
+                );
             })
             .catch((error) => {
                 console.error(error);
@@ -68,7 +77,7 @@ const Nav = () => {
     const handleLogOut = () => {
         signOut(auth)
             .then(() => {
-                setUserData({});
+                dispatch(removeUser());
                 navigate('/');
             })
             .catch((error) => {
@@ -109,7 +118,7 @@ const Nav = () => {
                         placeholder="검색어를 입력하세요"
                     />
                     <SignOut>
-                        <UserImg src={userData.photoURL} alt="userData.displayName" />
+                        <UserImg src={user.photoURL} alt={user.displayName} />
                         <DropDown>
                             <span
                                 onClick={() => {
