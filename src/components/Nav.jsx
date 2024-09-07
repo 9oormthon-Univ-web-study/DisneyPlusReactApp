@@ -72,7 +72,6 @@ const Nav = () => {
                 console.error(error);
             });
     };
-
     const handleLogOut = () => {
         signOut(auth)
             .then(() => {
