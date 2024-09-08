@@ -84,7 +84,8 @@ const Nav = () => {
     };
 
     return (
-        <NavWrapper show={show}>
+        //`$`접두사 사용하여 해당 prop이 DOM에 전달되지 않고 스타일링에만 사용됨을 알리며 경고 없앰
+        <NavWrapper $show={show}>
             <Logo>
                 {/* Logo가 NavWrapper안에 감싸져있기 때문에 안에 있을 수 있는듯 */}
                 <img
