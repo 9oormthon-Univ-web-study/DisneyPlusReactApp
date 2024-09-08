@@ -39,7 +39,7 @@ const Row = ({ title, id, fetchUrl }) => {
             <Swiper
                 //Swiper에서 사용할 모듈 지정(설치)
                 modules={[Navigation, Pagination, Scrollbar, A11y]}
-                loop={true} // 한 쪽 끝까지 가서 다음으로 넘기면 처음으로(반대쪽 끝으로) 돌아오게
+                loop={movies.length > 6} // 한 쪽 끝까지 가서 다음으로 넘기면 처음으로(반대쪽 끝으로) 돌아오게
                 navigation // arrow 사용 유무
                 pagination={{ clickable: true }} // 스크롤의 페이지 보이게 할 지
                 breakpoints={{
